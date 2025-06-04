@@ -1,0 +1,11 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Déconnexion{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Déconnexion réussie</h2>
+    <p>Vous avez été déconnecté de votre compte.</p>
+    <p><a href="{% url 'login' %}">Se connecter à nouveau</a></p>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ article.titre }}{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h1>{{ article.titre }}</h1>
+        <p class="article-meta">Par {{ article.auteur }} le {{ article.created_at|date:"d M Y" }}</p>
+        {% if article.photo %}
+            <img src="{{ article.photo.url }}" alt="{{ article.titre }}">
+        {% endif %}
+        <div class="article-content">
+            <p>{{ article.contenu }}</p>
+        </div>
+        <p><a href="{% url 'blog:article_list' %}">Retour à la liste des articles</a></p>
+    </div>
+
+    <div class="card comments-section">
+        <h2>Commentaires</h2>
+        {% for comment in comments %}
+            <div class="comment">
+                <p class="comment-meta"><strong>{{ comment.auteur }}</strong> le {{ comment.created_at|date:"d M Y H:i" }}</p>
+                <p>{{ comment.contenu }}</p>
+                {% if user.is_authenticated and user == comment.auteur %}
+                    <p>
+                        <a href="{% url 'blog:comment_update' article_slug=comment.article.slug pk=comment.pk %}">Modifier</a> |
+                        <a href="{% url 'blog:comment_delete' article_slug=comment.article.slug pk=comment.pk %}">Supprimer</a>
+                    </p>
+                {% endif %}
+            </div>
+        {% empty %}
+            <p>Aucun commentaire pour le moment.</p>
+        {% endfor %}
+
+        {% if user.is_authenticated %}
+            <div class="add-comment">
+                <h3>Ajouter un commentaire</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ comment_form.as_p }}
+                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                </form>
+            </div>
+        {% else %}
+            <p>Vous devez être connecté pour laisser un commentaire. <a href="{% url 'login' %}">Se connecter</a></p>
+        {% endif %}
+    </div>
+
+{% endblock %}

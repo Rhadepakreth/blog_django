@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Canard Métaphysique{% endblock %}</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #fcfcfc;
+            color: #333;
+            width: 100vw;
+        }
+        header {
+            background-color: #000000;
+            color: #fff;
+            padding: 0.5rem 0;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+        nav ul li {
+            margin: 0 15px;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 0;
+            display: block;
+            transition: color 0.3s ease;
+        }
+        nav ul li a:hover {
+            color: #ff5900;
+        }
+        .container {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 30px;
+        }
+        .card {
+            width: 80%;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        footer {
+            background-color: #070707;
+            color: #fff;
+            text-align: center;
+            padding: 1rem 0;
+            margin-top: 20px;
+        }
+        footer ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+        footer ul li {
+            margin: 0 10px;
+        }
+        footer ul li a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        footer ul li a:hover {
+            color: #ff6a00;
+        }
+        a {
+            color: #1f1f1f;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        a :hover img {
+            transform: translate(-5px, -5px);
+            transition: all 0.5s ease;
+            
+        }
+        .flex-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .img-container {
+            position: relative;
+            width: 500px;
+            height: 300px;
+        }
+        .orange-bg {
+            background-color: #ff5900;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 1;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Canard Métaphysique</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'blog:article_list' %}">Accueil</a></li>
+                {% for category in categories %}
+                <li><a href="{% url 'blog:article_category' slug=category %}">{{ category }}</a></li>
+                {% endfor %}
+            </ul>
+        </nav>
+    </header>
+
+        <div class="container">
+            {% block content %}
+            {% endblock %}
+        </div>
+    
+
+    <footer>
+        <ul>
+            <li><a href="{% url 'blog:mentions_legales' %}">Mentions Légales</a></li>
+            <li><a href="{% url 'blog:politique_confidentialite' %}">Politique de Confidentialité</a></li>
+        </ul>
+        <p>&copy; 2025 Made by Rhadëpakreth. Tous droits réservés.</p>
+    </footer>
+</body>
+</html>

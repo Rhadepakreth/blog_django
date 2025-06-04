@@ -1,0 +1,37 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Liste des Articles{% endblock %}
+
+{% block content %}
+        
+        {% for article in articles %}
+            <div class="card">
+                <a href="{% url 'blog:article_detail' article.slug %}">
+                    <h2>{{ article.titre }}</h2>
+                    <p>Par {{ article.auteur }} le {{ article.created_at|date:"d M Y" }}</p>
+                    <div class="flex-row">
+                        <div class="img-container">
+                            <img src="{{ article.photo.url }}" alt="{{ article.titre }}" width="400">
+                            <div class="orange-bg"></div>
+                        </div>
+                        <p>{{ article.contenu|truncatechars:400 }}</p>
+                    </div>
+                </a>
+            </div>
+        {% empty %}
+            <p>Aucun article pour le moment.</p>
+        {% endfor %}
+
+        {% if is_paginated %}
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}">Précédent</a>
+                {% endif %}
+                <span>Page {{ page_obj.number }} sur {{ page_obj.num_pages }}.</span>
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">Suivant</a>
+                {% endif %}
+            </div>
+        {% endif %}
+
+{% endblock %}
