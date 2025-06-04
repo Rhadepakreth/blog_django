@@ -124,6 +124,14 @@
                 {% for category in categories %}
                 <li><a href="{% url 'blog:article_category' slug=category %}">{{ category }}</a></li>
                 {% endfor %}
+                {% if user.is_authenticated %}
+                        <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" style="background: white; border: 1px solid white; color: #000; cursor: pointer; padding: 10px 10px; font-size: 1em;">Déconnexion {{ user.username }}</button>
+                        </form>
+                {% else %}
+                    <a href="{% url 'login' %}" style="background: white; border: 1px solid white; color: #000; cursor: pointer; padding: 10px 10px; font-size: 1em;">Connexion</a>
+                {% endif %}
             </ul>
         </nav>
     </header>

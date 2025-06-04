@@ -133,6 +133,7 @@ class ArticleDetailView(DetailView):
         comment_form = CommentForm()
         context['comments'] = comments
         context['comment_form'] = comment_form
+        context['categories'] = Article.objects.values_list('categorie', flat=True).distinct()
         return context
 
     def post(self, request, *args, **kwargs):

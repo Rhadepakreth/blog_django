@@ -7,7 +7,7 @@
         <h1>{{ article.titre }}</h1>
         <p class="article-meta">Par {{ article.auteur }} le {{ article.created_at|date:"d M Y" }}</p>
         {% if article.photo %}
-            <img src="{{ article.photo.url }}" alt="{{ article.titre }}">
+            <img src="{{ article.photo.url }}" alt="{{ article.titre }}" style="width: 100%;">
         {% endif %}
         <div class="article-content">
             <p>{{ article.contenu }}</p>
