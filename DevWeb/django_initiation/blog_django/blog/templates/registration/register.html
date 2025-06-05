@@ -1,10 +1,10 @@
 {% extends 'blog/base.html' %}
 
-{% block title %}Connexion{% endblock %}
+{% block title %}Inscription{% endblock %}
 
 {% block content %}
 <div class="card">
-    <h2>Connexion</h2>
+    <h2>Inscription</h2>
     <form method="post">
         {% csrf_token %}
         {% for field in form %}
@@ -19,8 +19,7 @@
                 {% endfor %}
             </div>
         {% endfor %}
-        <button type="submit" class="btn btn-primary">Se connecter</button>
+        <button type="submit" class="btn btn-primary">S'inscrire</button>
     </form>
-    <p>Pas encore de compte ? <a href="{% url 'blog:register' %}">S'inscrire</a></p>
 </div>
 {% endblock %}

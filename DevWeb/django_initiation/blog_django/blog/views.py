@@ -1,11 +1,14 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, TemplateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.urls import reverse_lazy
-from .models import Article, Comment
+from django.urls import reverse, reverse_lazy
+from .forms import UserRegisterForm, UserLoginForm
+from django.contrib.auth import login
+from django.shortcuts import render
+from .models import Article, Comment, Profile # Ajout de l'importation de Profile
 from .forms import CommentForm
 from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse
+
 
 
 class LegalPageView(TemplateView):
@@ -175,3 +178,46 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         comment = self.get_object()
         return self.request.user == comment.auteur
+
+from django.contrib.auth.views import LoginView
+
+class CustomLoginView(LoginView):
+    template_name = 'registration/login.html'
+    authentication_form = UserLoginForm
+
+    def form_valid(self, form):
+        # Authentifier l'utilisateur mais ne pas encore le connecter
+        user = form.get_user()
+        
+        # Vérifier si l'utilisateur a un profil, sinon en créer un
+        if not hasattr(user, 'profile'):
+            Profile.objects.create(user=user)
+        
+        # Rafraîchir l'objet utilisateur pour s'assurer que le profil est chargé
+        user.refresh_from_db()
+
+        # Connecter l'utilisateur après s'être assuré du profil
+        login(self.request, user)
+        
+        return super().form_valid(form)
+
+def register_view(request):
+    """
+    Gère l'inscription des nouveaux utilisateurs.
+    Si la requête est POST et que le formulaire est valide, un nouvel utilisateur est créé et connecté.
+    Sinon, un formulaire vide est affiché.
+    """
+    if request.method == 'POST':
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.first_name = form.cleaned_data.get('first_name')
+            user.last_name = form.cleaned_data.get('last_name')
+            user.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'Compte créé pour {username} !')
+            login(request, user)
+            return redirect('blog:article_list')
+    else:
+        form = UserRegisterForm()
+    return render(request, 'registration/register.html', {'form': form})
