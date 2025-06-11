@@ -1,0 +1,88 @@
+# Python bytecode and cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+
+# Django/SQLite database (local dev only)
+db.sqlite3
+
+# Virtual environments
+venv/
+ENV/
+.env/
+
+# Environment and secrets
+.env
+.env.*
+*.env
+*.pem
+*.key
+*.crt
+
+# IDE/editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Version control
+.git/
+.gitignore
+.svn/
+.hg/
+
+# Build and distribution outputs
+dist/
+build/
+out/
+
+# Test and debug artifacts
+test/
+tests/
+*.log
+debug/
+
+# Temporary files and folders
+tmp/
+temp/
+*.tmp
+
+# Documentation
+README*
+docs/
+*.md
+
+# Docker and Compose files
+Dockerfile*
+docker-compose*
+
+# Local development and config
+.local/
+local/
+config.local.*
+*.local.yml
+
+# Node.js (not detected, but common in polyglot repos)
+node_modules/
+npm-debug.log
+yarn-debug.log
+
+# Go (not detected, but for completeness)
+/vendor/
+*.test
+.go-cache/
+
+# Java (not detected, but for completeness)
+target/
+*.class
+.gradle/
+
+# Project-specific: media files (keep if needed for app, else ignore)
+# Uncomment the next line if you do NOT want to include user-uploaded media in the image
+# media/
+
+# Project-specific: static files (Django collects these at build time, so usually not ignored)
+# static/

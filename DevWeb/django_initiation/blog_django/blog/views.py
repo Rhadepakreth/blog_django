@@ -180,6 +180,8 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.request.user == comment.auteur
 
 from django.contrib.auth.views import LoginView
+from django.contrib import messages
+from .profile_forms import UserUpdateForm, ProfileUpdateForm
 
 class CustomLoginView(LoginView):
     template_name = 'registration/login.html'
@@ -196,9 +198,7 @@ class CustomLoginView(LoginView):
         # Rafraîchir l'objet utilisateur pour s'assurer que le profil est chargé
         user.refresh_from_db()
 
-        # Connecter l'utilisateur après s'être assuré du profil
-        login(self.request, user)
-        
+        # La méthode parente gérera la connexion de l'utilisateur et la redirection
         return super().form_valid(form)
 
 def register_view(request):
@@ -221,3 +221,36 @@ def register_view(request):
     else:
         form = UserRegisterForm()
     return render(request, 'registration/register.html', {'form': form})
+
+
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def profile_view(request):
+    if request.method == 'POST':
+        user_form = UserUpdateForm(request.POST, instance=request.user)
+        profile_form = ProfileUpdateForm(request.POST, instance=request.user.profile)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, 'Votre profil a été mis à jour avec succès !')
+            return redirect('blog:profile')
+    else:
+        user_form = UserUpdateForm(instance=request.user)
+        profile_form = ProfileUpdateForm(instance=request.user.profile)
+
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form
+    }
+    return render(request, 'blog/profile.html', context)
+
+@login_required
+def delete_account(request):
+    if request.method == 'POST':
+        user = request.user
+        user.delete()
+        messages.success(request, 'Votre compte a été supprimé avec succès.')
+        return redirect('blog:article_list') # Rediriger vers la page d'accueil après suppression
+    return render(request, 'blog/delete_account_confirm.html')
